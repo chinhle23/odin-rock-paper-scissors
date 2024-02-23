@@ -29,36 +29,73 @@ function playRound(playerSelection, computerSelection) {
     return `You Lose! Invalid option`
   }
 }
+let choices = document.querySelector('#choices');
+let resultDiv = document.querySelector('#result');
 
-function playGame() {
-  let playerScore = 0;
-  let computerScore = 0;
-  let i = 0;
-  while (i < 5) {
-    let playerSelection = prompt('rock, paper, or scissors?');
-    let computerSelection = getComputerChoice();
-    let result = playRound(playerSelection, computerSelection);
-    if (result === 'Tie!') {
-      console.log(`Tie! Both chose ${computerSelection}`);
-    } else if (result === 'You Lose! Invalid option') {
-      console.log(`You Lose! Invalid option entered`);
-      computerScore++;
-      i++;
-    } else if (result === 'You Lose!') {
-      console.log(`You Lose! ${computerSelection} beats ${playerSelection}`);
-      computerScore++;
-      i++;
-    } else {
-      console.log(`You Win! ${playerSelection} beats ${computerSelection}`);
-      playerScore++;
-      i++;
-    }
+choices.addEventListener('click', function (e) {
+  let target = e.target;
+  let resultText = document.createElement('p');
+  let computerSelection = getComputerChoice();
+  let playerSelection = '';
+  switch (target.value) {
+    case 'Rock':
+      playerSelection = 'Rock';
+      break;
+    case 'Paper':
+      playerSelection = 'Paper';
+      break;
+    case 'Scissors':
+      playerSelection = 'Scissors';
+      break;
   }
-  if (playerScore > computerScore) {
-    console.log(`Game Over. You win, ${playerScore} to ${computerScore}`)
+  console.log(playerSelection);
+  console.log(computerSelection);
+  let result = playRound(playerSelection, computerSelection);
+  if (result === 'Tie!') {
+    console.log(`Tie! Both chose ${computerSelection}`);
+    resultText.textContent = `Tie! Both chose ${computerSelection}`;
+  } else if (result === 'You Lose! Invalid option') {
+    console.log(`You Lose! Invalid option entered`);
+    resultText.textContent = `You Lose! Invalid option entered`;
+  } else if (result === 'You Lose!') {
+    console.log(`You Lose! ${computerSelection} beats ${playerSelection}`);
+    resultText.textContent = `You Lose! ${computerSelection} beats ${playerSelection}`;
   } else {
-    console.log(`Game Over. Computer wins, ${computerScore} to ${playerScore}`)
+    console.log(`You Win! ${playerSelection} beats ${computerSelection}`);
+    resultText.textContent = `You Win! ${playerSelection} beats ${computerSelection}`
   }
-}
+  resultDiv.appendChild(resultText)
+});
 
-playGame();
+// function playGame() {
+//   let playerScore = 0;
+//   let computerScore = 0;
+//   let i = 0;
+//   while (i < 5) {
+//     let playerSelection = prompt('rock, paper, or scissors?');
+//     let computerSelection = getComputerChoice();
+//     let result = playRound(playerSelection, computerSelection);
+//     if (result === 'Tie!') {
+//       console.log(`Tie! Both chose ${computerSelection}`);
+//     } else if (result === 'You Lose! Invalid option') {
+//       console.log(`You Lose! Invalid option entered`);
+//       computerScore++;
+//       i++;
+//     } else if (result === 'You Lose!') {
+//       console.log(`You Lose! ${computerSelection} beats ${playerSelection}`);
+//       computerScore++;
+//       i++;
+//     } else {
+//       console.log(`You Win! ${playerSelection} beats ${computerSelection}`);
+//       playerScore++;
+//       i++;
+//     }
+//   }
+//   if (playerScore > computerScore) {
+//     console.log(`Game Over. You win, ${playerScore} to ${computerScore}`)
+//   } else {
+//     console.log(`Game Over. Computer wins, ${computerScore} to ${playerScore}`)
+//   }
+// }
+
+// playGame();
