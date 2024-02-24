@@ -1,4 +1,4 @@
-function getComputerChoice() {
+function getComputerChoice () {
   let randomNumber = Math.floor(Math.random() * 3) + 1;
   switch (randomNumber) {
     case 1:
@@ -10,7 +10,7 @@ function getComputerChoice() {
   }
 }
 
-function playRound(playerSelection, computerSelection) {
+function playRound (playerSelection, computerSelection) {
   let playerString = playerSelection.toLowerCase();
   let player = playerString.replace(playerString[0],playerString[0].toUpperCase());
   if (player === computerSelection) {
@@ -29,11 +29,24 @@ function playRound(playerSelection, computerSelection) {
     return `You Lose! Invalid option`
   }
 }
+
+function resetGame () {
+  playerScore = 0;
+  computerScore = 0;
+  runningScore.textContent = `You: ${playerScore} - Computer: ${computerScore}`;
+  finalResult.textContent = '';
+  let roundsP = document.querySelectorAll('#rounds p');
+  for (let i = 0; i < roundsP.length; i++) {
+    roundsDiv.removeChild(roundsP[i]);
+  }
+}
+
 let choices = document.querySelector('#choices');
-let resultDiv = document.querySelector('#result');
+let roundsDiv = document.querySelector('#rounds');
 let runningScore = document.querySelector('#running-score')
 let playerScore = 0;
 let computerScore = 0;
+let finalResult = document.createElement('p');
 
 choices.addEventListener('click', function (e) {
   let target = e.target;
@@ -64,28 +77,24 @@ choices.addEventListener('click', function (e) {
     roundText.textContent = `You Win! ${playerSelection} beats ${computerSelection}`;
     playerScore++;
   }
-  
+    
   let playerWon = playerScore > 4;
-  let computerWon = computerScore > 5;
-  let gameOver = playerWon || computerWon;
+  let computerWon = computerScore > 4;
+  let gameOver = (playerWon || computerWon) && finalResult.textContent !== '';
   
   runningScore.textContent = `You: ${playerScore} - Computer: ${computerScore}`
 
-  if (!gameOver) {
-    resultDiv.appendChild(roundText);
+  if (gameOver) {
+    resetGame();
   } else if (playerWon) {
-    resultDiv.appendChild(roundText);
-    let finalResult = document.createElement('p');
+    roundsDiv.appendChild(roundText);
     finalResult.textContent = `Game Over. You win, ${playerScore} to ${computerScore}`;
-    resultDiv.appendChild(finalResult);
-    playerScore = 0;
-    computerScore = 0;
-  } else {
-    resultDiv.appendChild(roundText);
-    let finalResult = document.createElement('p');
+    roundsDiv.appendChild(finalResult);
+  } else if (computerWon) {
+    roundsDiv.appendChild(roundText);
     finalResult.textContent = `Game Over. Computer wins, ${computerScore} to ${playerScore}`;
-    resultDiv.appendChild(finalResult);
-    playerScore = 0;
-    computerScore = 0;
+    roundsDiv.appendChild(finalResult);
+  } else {
+    roundsDiv.appendChild(roundText);
   }
 });
