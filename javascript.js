@@ -31,12 +31,16 @@ function playRound(playerSelection, computerSelection) {
 }
 let choices = document.querySelector('#choices');
 let resultDiv = document.querySelector('#result');
+let runningScore = document.querySelector('#running-score')
+let playerScore = 0;
+let computerScore = 0;
 
 choices.addEventListener('click', function (e) {
   let target = e.target;
-  let resultText = document.createElement('p');
+  let roundText = document.createElement('p');
   let computerSelection = getComputerChoice();
   let playerSelection = '';
+
   switch (target.value) {
     case 'Rock':
       playerSelection = 'Rock';
@@ -48,54 +52,40 @@ choices.addEventListener('click', function (e) {
       playerSelection = 'Scissors';
       break;
   }
-  console.log(playerSelection);
-  console.log(computerSelection);
+
   let result = playRound(playerSelection, computerSelection);
+
   if (result === 'Tie!') {
-    console.log(`Tie! Both chose ${computerSelection}`);
-    resultText.textContent = `Tie! Both chose ${computerSelection}`;
-  } else if (result === 'You Lose! Invalid option') {
-    console.log(`You Lose! Invalid option entered`);
-    resultText.textContent = `You Lose! Invalid option entered`;
+    roundText.textContent = `Tie! Both chose ${computerSelection}`;
   } else if (result === 'You Lose!') {
-    console.log(`You Lose! ${computerSelection} beats ${playerSelection}`);
-    resultText.textContent = `You Lose! ${computerSelection} beats ${playerSelection}`;
+    roundText.textContent = `You Lose! ${computerSelection} beats ${playerSelection}`;
+    computerScore++;
   } else {
-    console.log(`You Win! ${playerSelection} beats ${computerSelection}`);
-    resultText.textContent = `You Win! ${playerSelection} beats ${computerSelection}`
+    roundText.textContent = `You Win! ${playerSelection} beats ${computerSelection}`;
+    playerScore++;
   }
-  resultDiv.appendChild(resultText)
+  
+  let playerWon = playerScore > 4;
+  let computerWon = computerScore > 5;
+  let gameOver = playerWon || computerWon;
+  
+  runningScore.textContent = `You: ${playerScore} - Computer: ${computerScore}`
+
+  if (!gameOver) {
+    resultDiv.appendChild(roundText);
+  } else if (playerWon) {
+    resultDiv.appendChild(roundText);
+    let finalResult = document.createElement('p');
+    finalResult.textContent = `Game Over. You win, ${playerScore} to ${computerScore}`;
+    resultDiv.appendChild(finalResult);
+    playerScore = 0;
+    computerScore = 0;
+  } else {
+    resultDiv.appendChild(roundText);
+    let finalResult = document.createElement('p');
+    finalResult.textContent = `Game Over. Computer wins, ${computerScore} to ${playerScore}`;
+    resultDiv.appendChild(finalResult);
+    playerScore = 0;
+    computerScore = 0;
+  }
 });
-
-// function playGame() {
-//   let playerScore = 0;
-//   let computerScore = 0;
-//   let i = 0;
-//   while (i < 5) {
-//     let playerSelection = prompt('rock, paper, or scissors?');
-//     let computerSelection = getComputerChoice();
-//     let result = playRound(playerSelection, computerSelection);
-//     if (result === 'Tie!') {
-//       console.log(`Tie! Both chose ${computerSelection}`);
-//     } else if (result === 'You Lose! Invalid option') {
-//       console.log(`You Lose! Invalid option entered`);
-//       computerScore++;
-//       i++;
-//     } else if (result === 'You Lose!') {
-//       console.log(`You Lose! ${computerSelection} beats ${playerSelection}`);
-//       computerScore++;
-//       i++;
-//     } else {
-//       console.log(`You Win! ${playerSelection} beats ${computerSelection}`);
-//       playerScore++;
-//       i++;
-//     }
-//   }
-//   if (playerScore > computerScore) {
-//     console.log(`Game Over. You win, ${playerScore} to ${computerScore}`)
-//   } else {
-//     console.log(`Game Over. Computer wins, ${computerScore} to ${playerScore}`)
-//   }
-// }
-
-// playGame();
